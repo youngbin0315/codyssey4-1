@@ -46,10 +46,10 @@ ss -tulnp | grep sshd
 ### 확인 결과
 
 ```
-`Port 20022
-PermitRootLogin no`
-`tcp   LISTEN 0      128          0.0.0.0:20022      0.0.0.0:*    users:(("sshd",pid=4383,fd=3))
-tcp   LISTEN 0      128             [::]:20022         [::]:*    users:(("sshd",pid=4383,fd=4))`
+Port 20022
+PermitRootLogin no
+tcp   LISTEN 0      128          0.0.0.0:20022      0.0.0.0:*    users:(("sshd",pid=4383,fd=3))
+tcp   LISTEN 0      128             [::]:20022         [::]:*    users:(("sshd",pid=4383,fd=4))
 ```
 
 ![sshd_config](evidence/01_ssh_config.png)
@@ -114,7 +114,9 @@ id agent-test
 ### 확인 결과
 
 ```
-(TODO: id 3개 출력 붙여넣기)
+uid=1000(agent-admin) gid=1002(agent-admin) groups=1002(agent-admin),1000(agent-common),1001(agent-core)
+uid=1001(agent-dev) gid=1003(agent-dev) groups=1003(agent-dev),1000(agent-common),1001(agent-core)
+uid=1002(agent-test) gid=1004(agent-test) groups=1004(agent-test),1000(agent-common)
 ```
 
 ![id check](evidence/04_id_check.png)
