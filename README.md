@@ -46,8 +46,10 @@ ss -tulnp | grep sshd
 ### 확인 결과
 
 ```
-(TODO: grep 결과 붙여넣기)
-(TODO: ss -tulnp | grep sshd 결과 붙여넣기)
+`Port 20022
+PermitRootLogin no`
+`tcp   LISTEN 0      128          0.0.0.0:20022      0.0.0.0:*    users:(("sshd",pid=4383,fd=3))
+tcp   LISTEN 0      128             [::]:20022         [::]:*    users:(("sshd",pid=4383,fd=4))`
 ```
 
 ![sshd_config](evidence/01_ssh_config.png)
