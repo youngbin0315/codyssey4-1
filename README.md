@@ -123,16 +123,57 @@ id agent-test
 
 ### 명령어
 
-```
-(TODO)
+```bash
+export AGENT_HOME=/home/agent-admin/agent-app
+mkdir -p $AGENT_HOME/{upload_files,api_keys,bin} /var/log/agent-app
+
+# 상위 디렉토리 통과 권한
+chown agent-admin:agent-common $AGENT_HOME
+chmod 750 $AGENT_HOME
+setfacl -m g:agent-common:x /home/agent-admin
+
+# 공유 디렉토리: agent-common
+chown agent-admin:agent-common $AGENT_HOME/upload_files
+chmod 2770 $AGENT_HOME/upload_files
+setfacl -m g:agent-common:rwx $AGENT_HOME/upload_files
+setfacl -d -m g:agent-common:rwx $AGENT_HOME/upload_files
+
+# 보안 디렉토리: agent-core ONLY
+chown agent-admin:agent-core $AGENT_HOME/api_keys /var/log/agent-app
+chmod 2770 $AGENT_HOME/api_keys /var/log/agent-app
+setfacl -m g:agent-core:rwx $AGENT_HOME/api_keys /var/log/agent-app
+setfacl -d -m g:agent-core:rwx $AGENT_HOME/api_keys /var/log/agent-app
+
+# bin
+chown agent-dev:agent-core $AGENT_HOME/bin
+chmod 750 $AGENT_HOME/bin
 ```
 
 ### 확인 결과
 
+`ls -ld $AGENT_HOME $AGENT_HOME/* /var/log/agent-app`
+
 ```
-(TODO: ls -ld, getfacl 출력)
-(TODO: agent-test로 /var/log/agent-app 접근 시 거부되는 화면)
+drwxr-x---  1 agent-admin agent-common 46 Oct 16 11:57 /home/agent-admin/agent-app
+drwxrwx---+ 1 agent-admin agent-core    0 Oct 16 11:57 /home/agent-admin/agent-app/api_keys
+drwxr-x---  1 agent-dev   agent-core    0 Oct 16 11:57 /home/agent-admin/agent-app/bin
+drwxrwx---+ 1 agent-admin agent-common  0 Oct 16 11:57 /home/agent-admin/agent-app/upload_files
+drwxrwx---+ 1 agent-admin agent-core    0 Oct 16 11:57 /var/log/agent-app
 ```
+
+`su agent-test`로 접근 테스트
+
+```
+$ ls /var/log/agent-app
+ls: cannot open directory '/var/log/agent-app': Permission denied
+$ ls $AGENT_HOME/api_keys
+ls: cannot open directory '/home/agent-admin/agent-app/api_keys': Permission denied
+$ touch $AGENT_HOME/upload_files/test.txt && echo upload_OK
+upload_OK
+```
+
+- `upload_files`: agent-common만 읽기/쓰기 가능 (agent-test 쓰기 성공)
+- `api_keys`, `/var/log/agent-app`: agent-core만 가능 (agent-test는 거부)
 
 ![dir permission](evidence/05_dir_permission.png)
 ![acl](evidence/06_getfacl.png)
