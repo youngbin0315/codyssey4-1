@@ -11,7 +11,7 @@
 | 실행 환경 | Docker Desktop, `ubuntu:22.04` 컨테이너 (`--privileged`) |
 | 컨테이너 이름 | `linux-mission` |
 | 방화벽 | UFW |
-| 제공 앱 | `agent-app-linux-arm64` (TODO: 실제 파일명 확인) |
+| 제공 앱 | `agent-app-linux-arm64` `Intel Mac (x86_64)` |
 
 ```bash
 docker run -it --privileged --name linux-mission -p 20022:20022 -p 15034:15034 ubuntu:22.04 /bin/bash
